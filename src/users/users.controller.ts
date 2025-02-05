@@ -10,4 +10,9 @@ export class UserController {
   async findMatchType(@Param('type') type: string) {
     return this.userService.findMatchType(type);
   }
+
+  @Post('test/save')
+  async createUser(@Body() userData: { score: number; type: string }) {
+    return this.userService.createUser(userData);
+  }
 }
