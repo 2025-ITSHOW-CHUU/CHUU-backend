@@ -8,8 +8,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.DB_URL),
-    UserModule, // 예시로 UserModule을 추가한 것입니다.
+    MongooseModule.forRoot(process.env.DB_URL || ''),
+    UserModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '../.env',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
