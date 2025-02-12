@@ -10,23 +10,29 @@ export class HomeService {
   ) {}
 
   async saveScore(questionNumber: number, name: string) {
-    const questionData = this.questionModel.findOne({
+    const updateQuery = { [`scores.${name}`]: 1 };
+    const incrementQuery = { $inc: { [`scores.${name}`]: 1 } };
+
+    const questionData = await this.questionModel.findOne({
       question: questionNumber,
     });
 
     if (!questionData) {
       const newQuestion = new this.questionModel({
         question: questionNumber,
-        scores: new Map([[name, 1]]),
+        scores: updateQuery,
       });
-
-      return await newQuestion.save();
+      await newQuestion.save();
+      return { message: 'success', scores: newQuestion.scores };
     }
 
-    await this.questionModel.updateOne(
+    const updatedQuestion = await this.questionModel.findOneAndUpdate(
       { question: questionNumber },
-      { $inc: { [`scores.${name}`]: 1 } },
+      incrementQuery,
+      { new: true, upsert: true },
     );
+
+    return { message: 'success', scores: updatedQuestion.scores };
   }
 
   async getScore(

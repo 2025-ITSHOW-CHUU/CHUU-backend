@@ -12,5 +12,6 @@ import { Question, QuestionSchema } from './schemas/home.schema';
   ],
   controllers: [HomeController],
   providers: [HomeService],
+  exports: [HomeService],
 })
-export class UserModule {}
+export class HomeModule {}
