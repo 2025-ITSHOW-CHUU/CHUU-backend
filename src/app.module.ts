@@ -5,6 +5,7 @@ import { UserModule } from './users/users.module';
 import { Mongoose } from 'mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { HomeController } from './home/home.controller';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       envFilePath: '../.env',
     }),
   ],
-  controllers: [AppController],
+  controllers: [AppController, HomeController],
   providers: [AppService],
 })
 export class AppModule {}
