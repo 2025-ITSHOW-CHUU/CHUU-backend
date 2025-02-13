@@ -10,7 +10,7 @@ export class HomeService {
   ) {}
 
   async saveScore(questionNumber: number, name: string) {
-    const updateQuery = { [`scores.${name}`]: 1 };
+    const updateQuery = { [name]: 1 };
     const incrementQuery = { $inc: { [`scores.${name}`]: 1 } };
 
     const questionData = await this.questionModel.findOne({
@@ -51,7 +51,7 @@ export class HomeService {
 
     return {
       message: 'success',
-      scores: Object.fromEntries(questions.scores),
+      scores: questions.scores,
     };
   }
 }

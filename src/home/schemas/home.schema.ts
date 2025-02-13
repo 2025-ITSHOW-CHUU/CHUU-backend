@@ -8,8 +8,8 @@ export class Question {
   @Prop()
   question: number;
 
-  @Prop({ type: Map, of: Number })
-  scores: Map<string, number>;
+  @Prop({ type: Object, default: {} })
+  scores: Record<string, number>;
 }
 
 export const QuestionSchema = SchemaFactory.createForClass(Question);

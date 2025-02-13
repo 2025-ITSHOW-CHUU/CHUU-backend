@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { HomeService } from './home.service';
 
 @Controller('home')
@@ -13,8 +21,8 @@ export class HomeController {
     return this.homeService.saveScore(questionNumber, teacherName);
   }
 
-  @Get('getscores')
-  async getScores(@Body('questionNumber') questionNumber: number) {
+  @Get('get/:questionNumber')
+  async getScores(@Param('questionNumber') questionNumber: number) {
     return this.homeService.getScore(questionNumber);
   }
 }
