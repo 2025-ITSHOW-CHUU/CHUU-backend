@@ -6,13 +6,13 @@ import { User } from './schemas/users.schema';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('type/:type')
+  @Get('/:type')
   async findMatchType(@Param('type') type: string) {
     return this.userService.findMatchType(type);
   }
 
-  @Post('test/save')
+  @Post('')
   async createUser(@Body() userData: { score: number; type: string }) {
-    return this.userService.createUser(userData);
+    return this.userService.createScore(userData);
   }
 }

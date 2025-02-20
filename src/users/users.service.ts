@@ -8,10 +8,15 @@ export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async findMatchType(type: string): Promise<User[]> {
-    return this.userModel.find({ type }).exec(); // 간단하게 수정
+    return this.userModel.find({ type });
   }
 
-  async createUser(userData: { score: number; type: string }): Promise<User> {
-    return this.userModel.create(userData);
+  async createScore(userData: { score: number; type: string }) {
+    const newScore = new this.userModel({
+      score: userData.score,
+      type: userData.type,
+    });
+
+    await newScore.save();
   }
 }

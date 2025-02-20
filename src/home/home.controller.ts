@@ -13,7 +13,7 @@ import { HomeService } from './home.service';
 export class HomeController {
   constructor(private readonly homeService: HomeService) {}
 
-  @Post('vote')
+  @Post('')
   async saveScore(
     @Body('questionNumber') questionNumber: number,
     @Body('teacherName') teacherName: string,
@@ -21,7 +21,7 @@ export class HomeController {
     return this.homeService.saveScore(questionNumber, teacherName);
   }
 
-  @Get('get/:questionNumber')
+  @Get('/:questionNumber')
   async getScores(@Param('questionNumber') questionNumber: number) {
     return this.homeService.getScore(questionNumber);
   }

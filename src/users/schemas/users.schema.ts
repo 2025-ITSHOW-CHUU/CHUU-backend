@@ -8,7 +8,7 @@ export class User {
   @Prop()
   score: number;
 
-  @Prop()
+  @Prop({ unique: false })
   type: string;
 }
 
