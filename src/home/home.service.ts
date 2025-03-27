@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Question, QuestionDocument } from './schemas/home.schema';
@@ -52,6 +52,22 @@ export class HomeService {
     return {
       message: 'success',
       scores: questions.scores,
+    };
+  }
+
+  async getTotalScore(): Promise<{ message: string; scores: object[] }> {
+    const questions = await this.questionModel.find({});
+
+    if (!questions) {
+      return {
+        message: 'fail',
+        scores: [],
+      };
+    }
+
+    return {
+      message: 'success',
+      scores: questions,
     };
   }
 }
