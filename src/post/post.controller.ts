@@ -20,7 +20,6 @@ export class PostController {
     @UploadedFiles() files: Express.Multer.File[],
     @Body() createPostDto: CreatePostDto,
   ) {
-    console.log(files[0], createPostDto);
     return await this.postService.uploadPost(createPostDto, files);
   }
 }

@@ -47,7 +47,7 @@ export class PostService {
         const fileUrl = uploadResult.Location;
         const newPost = new this.postModel({
           ...createPostDto,
-          imageUrl: fileUrl,
+          image: fileUrl,
         });
 
         await newPost.save();
@@ -57,7 +57,6 @@ export class PostService {
         throw new Error(`Failed to upload post: ${error}`);
       }
     } else {
-      console.log('none file');
       return { success: false, message: 'No file provided' };
     }
   }
