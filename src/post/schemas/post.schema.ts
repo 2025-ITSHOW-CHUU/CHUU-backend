@@ -11,7 +11,7 @@ export class Post {
   @Prop({ unique: false })
   comment: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: false, unique: true })
   image?: string;
 }
 

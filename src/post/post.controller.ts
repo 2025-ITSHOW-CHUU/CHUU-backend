@@ -3,7 +3,7 @@ import {
   Post,
   UseInterceptors,
   Body,
-  UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
@@ -17,10 +17,10 @@ export class PostController {
   @Post('/upload')
   @UseInterceptors(AnyFilesInterceptor({ storage: multer.memoryStorage() }))
   async uploadPost(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles() files: Express.Multer.File[],
     @Body() createPostDto: CreatePostDto,
   ) {
-    console.log(file, createPostDto);
-    return await this.postService.uploadPost(createPostDto, file);
+    console.log(files[0], createPostDto);
+    return await this.postService.uploadPost(createPostDto, files);
   }
 }

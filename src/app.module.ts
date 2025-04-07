@@ -20,7 +20,7 @@ import { PostModule } from './post/post.module';
     HomeModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../.env',
+      envFilePath: `../.env`,
     }),
     PostModule,
   ],

@@ -21,44 +21,44 @@ export class PostService {
       region: process.env.AWS_REGION,
     });
     this.s3 = new AWS.S3();
-    this.bucketName = this.configService.get<string>('AWS_BUCKET_NAME') || '';
-  }
-
-  async fileUpload(file: Express.Multer.File): Promise<string> {
-    try {
-      const timestamp = Date.now();
-      const key = `image/chuu/${timestamp}-${file.originalname}`;
-
-      const uploadParams = {
-        Bucket: this.bucketName,
-        Key: key,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-      };
-
-      const uploadResult = await this.s3.upload(uploadParams).promise();
-      return uploadResult.Location;
-    } catch (error) {
-      throw new Error(`File upload failed: ${error}`);
-    }
+    this.bucketName =
+      this.configService.get<string>('AWS_BUCKET_NAME') || 'it-show-nuto';
   }
 
   async uploadPost(
     createPostDto: CreatePostDto,
-    file: Express.Multer.File,
+    files: Express.Multer.File[],
   ): Promise<{ success: boolean; message: string }> {
-    try {
-      const fileUrl = await this.fileUpload(file);
-      const newPost = new this.postModel({
-        ...createPostDto,
-        imageUrl: fileUrl,
-      });
+    if (files[0]) {
+      try {
+        const timestamp = Date.now();
 
-      await newPost.save();
+        const key = `image/chuu/${timestamp}-${files[0].originalname}`;
 
-      return { success: true, message: 'Success to upload post' };
-    } catch (error) {
-      throw new Error(`Failed to upload post: ${error}`);
+        const uploadParams = {
+          Bucket: this.bucketName,
+          Key: key,
+          Body: files[0].buffer,
+          ContentType: files[0].mimetype,
+        };
+
+        const uploadResult = await this.s3.upload(uploadParams).promise();
+
+        const fileUrl = uploadResult.Location;
+        const newPost = new this.postModel({
+          ...createPostDto,
+          imageUrl: fileUrl,
+        });
+
+        await newPost.save();
+
+        return { success: true, message: 'Success to upload post' };
+      } catch (error) {
+        throw new Error(`Failed to upload post: ${error}`);
+      }
+    } else {
+      console.log('none file');
+      return { success: false, message: 'No file provided' };
     }
   }
 }
