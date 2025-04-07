@@ -8,6 +8,8 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserController } from './users/users.controller';
 import { HomeController } from './home/home.controller';
+import { PostController } from './post/post.controller';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -20,8 +22,9 @@ import { HomeController } from './home/home.controller';
       isGlobal: true,
       envFilePath: '../.env',
     }),
+    PostModule,
   ],
-  controllers: [AppController, HomeController, UserController],
+  controllers: [AppController, HomeController, UserController, PostController],
   providers: [AppService],
 })
 export class AppModule {}
