@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { CreatePostDto } from './dto/post.dto';
 import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
+import { PostGateway } from './post.gateway';
 
 @Injectable()
 export class PostService {
@@ -14,6 +15,7 @@ export class PostService {
   constructor(
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     private configService: ConfigService,
+    private postGateway: PostGateway,
   ) {
     AWS.config.update({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -51,6 +53,8 @@ export class PostService {
         });
 
         await newPost.save();
+
+        this.postGateway.sendNewPost(newPost);
 
         return { success: true, message: 'Success to upload post' };
       } catch (error) {
