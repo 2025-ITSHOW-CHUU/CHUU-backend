@@ -7,6 +7,12 @@ import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
 import { PostGateway } from './post.gateway';
 
+type PostType = {
+  teacher: string;
+  comment: string;
+  image: string;
+};
+
 @Injectable()
 export class PostService {
   private s3: AWS.S3;
@@ -62,6 +68,28 @@ export class PostService {
       }
     } else {
       return { success: false, message: 'No file provided' };
+    }
+  }
+
+  async getPost(): Promise<{
+    success: boolean;
+    message: string;
+    data?: PostType[];
+  }> {
+    try {
+      const posts = await this.postModel.find().exec();
+      const formattedPosts: PostType[] = posts.map((post) => ({
+        teacher: post.teacher,
+        comment: post.comment,
+        image: post.image || '',
+      }));
+      return {
+        success: true,
+        message: 'Success to get posts',
+        data: formattedPosts,
+      };
+    } catch (error) {
+      throw new Error(`Failed to get posts: ${error}`);
     }
   }
 }

@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   UseInterceptors,
   Body,
   UploadedFiles,
@@ -21,5 +22,10 @@ export class PostController {
     @Body() createPostDto: CreatePostDto,
   ) {
     return await this.postService.uploadPost(createPostDto, files);
+  }
+
+  @Get()
+  async getPost() {
+    return await this.postService.getPost();
   }
 }
