@@ -40,4 +40,9 @@ export class UserService implements OnModuleInit {
 
     await newScore.save();
   }
+
+  async getTotalUser() {
+    const totalUser = await this.userModel.countDocuments();
+    return totalUser;
+  }
 }

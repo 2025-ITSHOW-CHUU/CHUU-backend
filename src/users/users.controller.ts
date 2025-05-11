@@ -1,6 +1,5 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { UserService } from './users.service';
-import { User } from './schemas/users.schema';
 
 @Controller('users')
 export class UserController {
@@ -14,5 +13,10 @@ export class UserController {
   @Post('')
   async createUser(@Body() userData: { score: number; type: string }) {
     return this.userService.createScore(userData);
+  }
+
+  @Get('')
+  async getTotalUser() {
+    return this.userService.getTotalUser();
   }
 }
