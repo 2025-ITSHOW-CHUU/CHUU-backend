@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { HomeController } from './home.controller';
 import { HomeService } from './home.service';
 import { Question, QuestionSchema } from './schemas/home.schema';
+import { EventGateway } from 'src/event/event.gateway';
 
 @Module({
   imports: [
@@ -11,7 +12,7 @@ import { Question, QuestionSchema } from './schemas/home.schema';
     ]),
   ],
   controllers: [HomeController],
-  providers: [HomeService],
+  providers: [HomeService, EventGateway],
   exports: [HomeService],
 })
 export class HomeModule {}
