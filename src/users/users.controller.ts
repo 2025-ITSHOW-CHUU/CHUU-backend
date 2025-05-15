@@ -5,6 +5,11 @@ import { UserService } from './users.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('/max')
+  getMaxTeacher() {
+    return this.userService.getMaxUser();
+  }
+
   @Get('/:type')
   async findMatchType(@Param('type') type: string) {
     return this.userService.findMatchType(type);

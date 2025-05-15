@@ -45,4 +45,24 @@ export class UserService implements OnModuleInit {
     const totalUser = await this.userModel.countDocuments();
     return totalUser;
   }
+
+  async getMaxUser() {
+    const teachers = [
+      { id: '조예진', teacherScore: 0 },
+      { id: '장하나', teacherScore: 0 },
+      { id: '박지우', teacherScore: 0 },
+      { id: '김윤지', teacherScore: 0 },
+      { id: '이호연', teacherScore: 0 },
+      { id: '이대형', teacherScore: 0 },
+    ];
+
+    for (const teacherObject of teachers) {
+      const resultTeacher = await this.userModel.find({
+        type: teacherObject.id,
+      });
+      teacherObject.teacherScore = resultTeacher.length;
+    }
+
+    return teachers;
+  }
 }
