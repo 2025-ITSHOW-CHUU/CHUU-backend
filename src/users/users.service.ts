@@ -39,6 +39,9 @@ export class UserService implements OnModuleInit {
     });
 
     await newScore.save();
+
+    const teachers = await this.getMaxUser();
+    this.eventGateway.server.emit('update-test', teachers);
   }
 
   async getTotalUser() {
