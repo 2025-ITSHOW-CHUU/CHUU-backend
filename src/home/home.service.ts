@@ -37,8 +37,6 @@ export class HomeService {
           return acc;
         }, {});
 
-      console.log(sortedScores);
-
       this.eventGateway.server.emit('update-encate', {
         questionNumber: newQuestion.question,
         teacherName: Object.keys(sortedScores)[0],
