@@ -1,33 +1,16 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Param,
-  Get,
-  Res,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
-import { ImageService } from './image.service';
+// image.controller.ts
+import { Controller, Post, Body, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { ImageService } from './image.service';
 
-@Controller()
+@Controller('upload')
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}
 
-  @Post('/upload')
-  async uploadImage(@Body() body: { image: string }) {
-    const filename = await this.imageService.saveBase64Image(body.image);
-    return { filename };
-  }
-
-  @Get('/print/:filename')
-  async printPage(@Param('filename') filename: string, @Res() res: Response) {
-    try {
-      const html = await this.imageService.getPrintableHtml(filename);
-      res.send(html);
-    } catch (error) {
-      throw new HttpException('Image not found', HttpStatus.NOT_FOUND, error);
-    }
+  @Post()
+  async printImage(@Body('file') base64: string, @Res() res: Response) {
+    const html = await this.imageService.getPrintableHtmlFromBase64(base64);
+    res.setHeader('Content-Type', 'text/html');
+    res.send(html);
   }
 }
