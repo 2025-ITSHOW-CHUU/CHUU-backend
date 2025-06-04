@@ -10,6 +10,8 @@ import { HomeController } from './home/home.controller';
 import { PostController } from './post/post.controller';
 import { PostModule } from './post/post.module';
 import { EventGateway } from './event/event.gateway';
+import { ImageController } from './image/image.controller';
+import { ImageModule } from './image/image.module';
 
 @Module({
   imports: [
@@ -23,8 +25,15 @@ import { EventGateway } from './event/event.gateway';
       envFilePath: `../.env`,
     }),
     PostModule,
+    ImageModule,
   ],
-  controllers: [AppController, HomeController, UserController, PostController],
+  controllers: [
+    AppController,
+    HomeController,
+    UserController,
+    PostController,
+    ImageController,
+  ],
   providers: [AppService, EventGateway],
 })
 export class AppModule {}
