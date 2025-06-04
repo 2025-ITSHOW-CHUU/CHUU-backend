@@ -15,11 +15,11 @@ export class ImageService {
             <head>
                 <title>Print Image</title>
                 <style>
-                    body { text-align: center; margin: 0; padding: 0; }
-                    img { width: 100%; margin-top: 10px; }
+                    body { text-align: center; margin: 0; padding: 20px; background-color: #f9f9f9; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; }
+                    img { width: 100%; filter: brightness(1.5) invert(0); position: absoulte; }
                 </style>
             </head>
-            <body onload="window.print()">
+            <body onload="window.print()">  
                 <img src="${imageSrc}" alt="Printable Image" />
             </body>
             </html>
