@@ -17,6 +17,8 @@ import { ChatModule } from './gemini/chatbot/chat.module';
 import { TeacherModule } from './gemini/chatbot/teacher.module';
 import { GeminiController } from './gemini/presenters/gemini.controller';
 import { GeminiProModelProvider } from './gemini/gemini.provider';
+import { ImageController } from './image/image.controller';
+import { ImageModule } from './image/image.module';
 
 @Module({
   imports: [
@@ -33,8 +35,9 @@ import { GeminiProModelProvider } from './gemini/gemini.provider';
     ChatModule,
     GeminiModule,
     TeacherModule,
+    ImageModule,
   ],
-  controllers: [AppController, HomeController, UserController, PostController, ChatController, TeacherController, GeminiController],
+  controllers: [AppController, HomeController, UserController, PostController, ChatController, TeacherController, GeminiController, ImageController],
   providers: [AppService, EventGateway, GeminiProModelProvider],
 })
 
