@@ -10,6 +10,13 @@ import { HomeController } from './home/home.controller';
 import { PostController } from './post/post.controller';
 import { PostModule } from './post/post.module';
 import { EventGateway } from './event/event.gateway';
+import { GeminiModule } from './gemini/gemini.module';
+import { ChatController } from './gemini/chatbot/chat.controller';
+import { TeacherController } from './gemini/chatbot/teacher.controller';
+import { ChatModule } from './gemini/chatbot/chat.module';
+import { TeacherModule } from './gemini/chatbot/teacher.module';
+import { GeminiController } from './gemini/presenters/gemini.controller';
+import { GeminiProModelProvider } from './gemini/gemini.provider';
 import { ImageController } from './image/image.controller';
 import { ImageModule } from './image/image.module';
 
@@ -25,15 +32,13 @@ import { ImageModule } from './image/image.module';
       envFilePath: `../.env`,
     }),
     PostModule,
+    ChatModule,
+    GeminiModule,
+    TeacherModule,
     ImageModule,
   ],
-  controllers: [
-    AppController,
-    HomeController,
-    UserController,
-    PostController,
-    ImageController,
-  ],
-  providers: [AppService, EventGateway],
+  controllers: [AppController, HomeController, UserController, PostController, ChatController, TeacherController, GeminiController, ImageController],
+  providers: [AppService, EventGateway, GeminiProModelProvider],
 })
+
 export class AppModule {}
