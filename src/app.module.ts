@@ -37,8 +37,16 @@ import { ImageModule } from './image/image.module';
     TeacherModule,
     ImageModule,
   ],
-  controllers: [AppController, HomeController, UserController, PostController, ChatController, TeacherController, GeminiController, ImageController],
+  controllers: [
+    AppController,
+    HomeController,
+    UserController,
+    PostController,
+    ChatController,
+    TeacherController,
+    GeminiController,
+    ImageController,
+  ],
   providers: [AppService, EventGateway, GeminiProModelProvider],
 })
-
 export class AppModule {}
