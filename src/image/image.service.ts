@@ -16,11 +16,18 @@ export class ImageService {
                 <title>Print Image</title>
                 <style>
                     body { text-align: center; margin: 0; padding: 20px; background-color: #f9f9f9; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; }
-                    img { width: 100%; filter: brightness(1.5) invert(0); position: absoulte; }
+                    img { width: 100%; filter: grayscale(100%) invert(0); position: absoulte; }
                 </style>
             </head>
             <body onload="window.print()">  
                 <img src="${imageSrc}" alt="Printable Image" />
+                <script>
+                  window.onload = () => {
+                    setTimeout(() => {
+                      window.print();
+                    }, 500); // 이미지 로딩 여유시간
+                  };
+                </script>
             </body>
             </html>
         `;
