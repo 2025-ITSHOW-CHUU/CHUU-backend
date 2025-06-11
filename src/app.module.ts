@@ -23,13 +23,13 @@ import { ImageModule } from './image/image.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb://admin:591006@localhost:27017/chuu?authSource=admin',
+      'MONGO_URI=mongodb://chuu:chuu@mongo:27017/chuu?authSource=admin',
     ),
     UserModule,
     HomeModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `../.env`,
+      envFilePath: `.env`,
     }),
     PostModule,
     ChatModule,
