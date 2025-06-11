@@ -27,6 +27,8 @@ services:
       - chuu-network
     environment:
       - MONGODB_URI=mongodb://chuu:chuu@m®ongo:27017/chuu?authSource=admin
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
 volumes:
   mongo-data:
