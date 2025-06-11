@@ -1,21 +1,19 @@
-# 1. Node 이미지 사용
-FROM node:18
+# 1단계: 빌드
+FROM node:18-alpine as builder
+WORKDIR /app
+COPY . .
+RUN npm install && npm run build
 
-# 2. 작업 디렉토리 생성
+# 2단계: 실제 런타임
+FROM node:18-alpine
 WORKDIR /app
 
-# 3. package.json과 lock 파일 복사
-COPY package*.json ./
+# 빌드된 파일만 복사
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
 
-# 4. 의존성 설치
-RUN npm cache clean --force
-RUN npm install
+# 프로덕션 의존성만 설치
+RUN npm install --omit=dev
 
-# 5. 소스 전체 복사
-COPY . .
-
-# 6. NestJS 빌드 (제일 중요!!)
-RUN npm run build
-
-# 7. 앱 실행 (빌드된 dist/main.js 실행)
-CMD ["npm", "run", "start:prod"]
+# 실행
+CMD ["node", "dist/src/main"]
