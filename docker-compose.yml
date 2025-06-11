@@ -22,7 +22,7 @@ services:
     depends_on:
       - mongo
     ports:
-      - '3000:3000'
+      - '443:443'
     networks:
       - chuu-network
     environment:
