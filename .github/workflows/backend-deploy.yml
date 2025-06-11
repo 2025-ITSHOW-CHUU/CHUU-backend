@@ -21,15 +21,12 @@ jobs:
           echo "${{ secrets.EC2_KEY_BS64 }}" | tr -d '\n' | base64 -d > key.pem
           chmod 600 key.pem
 
-      - name: Docker image build & push
-        working-directory: ${{ github.workspace }}
+      - name: Docker Login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      
+      - name: Docker build & push
         run: |
-          rm -rf node_modules package-lock.json
-          npm install
-          docker buildx build -t ${{ secrets.DOCKER_USERNAME }}/chuu-backend:latest . --push
-          docker tag chuu-backend ${{ secrets.DOCKER_USERNAME }}/chuu-backend:latest
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker push ${{ secrets.DOCKER_USERNAME }}/chuu-backend:latest
+          docker buildx build -t ${{ secrets.DOCKER_USERNAME }}/chuu-backend:latest . --no-cache --push
 
       - name: Backup MongoDB on EC2
         uses: appleboy/ssh-action@v1.0.0
