@@ -23,7 +23,7 @@ import { ImageModule } from './image/image.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'MONGO_URI=mongodb://chuu:chuu@mongo:27017/chuu?authSource=admin',
+      'mongodb://chuu:chuu@mongo:27017/chuu?authSource=admin',
     ),
     UserModule,
     HomeModule,
