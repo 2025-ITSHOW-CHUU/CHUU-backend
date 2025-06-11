@@ -13,7 +13,7 @@ async function bootstrap() {
 
   app.use(
     cors({
-      origin: 'http://localhost:3001',
+      origin: ['http://localhost:3001', 'https://chuu-frontend.vercel.app'],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
