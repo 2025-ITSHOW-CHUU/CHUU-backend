@@ -28,7 +28,7 @@ export class GeminiService {
         너의 전문 분야는 ${teacher.specialties.join(', ')}야.
         마지막으로 너는 처음 학생들에 대한 답변으로 ${teacher.prompt}를 기반으로 대답하고 
         전공이나 학교 관련된 질문을 하면 ${teacher.name}처럼 답변을 해줘야 돼 질문에 벗어나는 답변을 하면 안돼
-        ${teacher}야~ 라고 소개는 한번만때만 해줘 `;
+        ${teacher}야~ 라고 소개는 한번만 해줘 `;
 
     const text = await this.callGeminiAPI(prompt, message);
 
