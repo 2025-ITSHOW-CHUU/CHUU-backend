@@ -1,80 +1,87 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { GeminiService } from '../application/gemini.service';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Chat, ChatDocument } from './schemas/chat.schema';
 import { Model } from 'mongoose';
-import { CreateMessageDto } from '../dto/create-message.dto';
-import { Teacher } from './schemas/teacher.schema';
 
 @Injectable()
 export class ChatService {
-  getChatsByTeacherAndUser(teachId: string, roomId: string) {
-    throw new Error('Method not implemented.');
-  }
   constructor(
-    @InjectModel(Chat.name) private readonly chatModel: Model<ChatDocument>,
-    @InjectModel(Teacher.name) private readonly teacherModel: Model<Teacher>,
-    private readonly geminiService: GeminiService,
+      @InjectModel(Chat.name) private readonly chatModel: Model<ChatDocument>
   ) {}
-  // gemini 호출 함수
-  async createChat(createMessageDto: CreateMessageDto) {
-    const { teacherId, message, roomId } = createMessageDto;
-    // 선생님 포트프트 불러오기
-    const teacher = await this.teacherModel.findOne({ teacherId });
-    if (!teacher) {
-      throw new NotFoundException('해당 teacherId를 가져올 수 없습니다');
+  
+  private nameMemory = new Map<string, string>();
+
+  // 이름 로직 설정 및 초기화
+  setUserName(roomId: string, name: string) {
+    this.nameMemory.set(roomId, name);
+  }
+
+  getUserName(roomId: string): string | null {
+    return this.nameMemory.get(roomId) ?? null;
+  }
+
+  clearUserName(roomId: string) {
+    this.nameMemory.delete(roomId);
+  }   
+
+  // gemini 호출 함수, user / assistant 별로 관리
+  async createChat(data: {
+    roomId: string;
+    teacherId: string;
+    message: string;
+    role: 'user' | 'assistant';
+  }): Promise<Chat> {
+    const chat = new this.chatModel(data);
+    return chat.save();
+  }
+
+  // 특정 선생님 채팅방 내역 조회
+  async getChatsByTeacher(teacherId: string, roomId?: string): Promise<Chat[]> {
+    const filter: any = { teacherId };
+
+    if(roomId) {
+      filter.roomId = roomId;
     }
 
-    const prompt = teacher?.prompt || '';
+    const result = await this.chatModel
+      .find(filter)
+      .sort({ createdAt: 1 })
+      .select('role message createdAt roomId teacherId')
+      .lean()
+      .exec();
 
-    // geminiService 통해 답변 생성
-    const genAiResponse = await this.geminiService.generateText(
-      prompt,
-      message,
-    );
-    // db 저장
-    const createdChat = new this.chatModel({
-      teacherId: teacher.id,
-      roomId,
-      message,
-      response: genAiResponse.text,
-    });
-
-    await createdChat.save();
-    return createdChat;
+    return result;
+  
   }
 
-  // 채팅 리스트 가져오기
-  async getLatestChatsByUser(userId: string) {
-    return this.chatModel.aggregate([
-      { $match: { userId } },
-      { $sort: { createdAt: -1 } },
-      {
-        $group: {
-          _id: '$roomId',
-          teacherId: { $first: '$teacherId' },
-          message: { $first: '$message' },
-          response: { $first: '$response' },
-          createdAt: { $first: '$createdAt' },
-        },
-      },
-    ]);
-  }
-
-  // roomId로 전체 채팅 불러오기
-  async getChatsByRoomId(roomId: string) {
+  // 최근 메세지 불러오기
+  async getChatsByRoom(roomId: string): Promise<any[]> {
     return this.chatModel
       .find({ roomId })
       .sort({ createdAt: 1 })
-      .populate('teacherId') // teacherId 정보 불러오기
       .exec();
   }
 
-  async getChatsByUser(roomId: string) {
-    return this.chatModel
-      .find({ roomId })
-      .sort({ createdAt: -1 }) //최신순
-      .limit(50)
-      .exec();
+  // assistant 최근 메세지
+  async getLastAssistantMessagesByRoom(): Promise<any[]> {
+    return this.chatModel.aggregate([
+      { $match: { role: 'assistant' } },  // assistant 메시지만 필터
+      { $sort: { createdAt: -1 } },
+      { $group: {
+          _id: '$roomId',
+          teacherId: { $first: '$teacherId' },
+          lastReply: { $first: '$message' },
+          lastMessageTime: { $first: '$createdAt' }
+      }},
+      {
+        $project: {
+            _id: 0,
+            roomId: '$_id',
+            teacherId: 1,
+            lastReply: 1,
+            lastMessageTime: 1
+        }
+      }
+    ]);
   }
 }
