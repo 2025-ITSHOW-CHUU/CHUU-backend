@@ -4,15 +4,15 @@ import { Teacher } from './schemas/teacher.schema';
 
 @Controller('teachers')
 export class TeacherController {
-    constructor(private readonly teacherService: TeacherService) {}
+  constructor(private readonly teacherService: TeacherService) {}
 
-    @Get()
-    findAll(): Promise<Teacher[]> {
-        return this.teacherService.findAll();
-    }
+  @Get()
+  findAll(): Promise<Teacher[]> {
+    return this.teacherService.findAll();
+  }
 
-    @Post()
-    create(@Body() data: Partial<Teacher>): Promise<Teacher> {
-        return this.teacherService.create(data);
-    }
+  @Post()
+  create(@Body() data: Partial<Teacher>): Promise<Teacher> {
+    return this.teacherService.create(data);
+  }
 }
