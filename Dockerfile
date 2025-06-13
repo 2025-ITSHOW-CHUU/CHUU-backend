@@ -1,11 +1,11 @@
 # 1단계: 빌드
-FROM node:18-alpine as builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN npm install && npm run build
 
 # 2단계: 실제 런타임
-FROM node:18-alpine
+FROM node:20-alpine
 WORKDIR /app
 
 # 빌드된 파일만 복사
