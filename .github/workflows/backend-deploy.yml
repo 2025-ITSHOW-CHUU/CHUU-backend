@@ -53,4 +53,4 @@ jobs:
             sudo docker stop chuu-backend
             sudo docker rm chuu-backend
 
-            sudo docker run -d -p 443:443 --name chuu-backend --network chuu-network --env-file .env ${{ secrets.DOCKER_USERNAME }}/chuu-backend:latest
+            sudo docker run -d -p 443:443 --name chuu-backend --network chuu-network --env-file .env -e MONGO_URL --env MONGODB_URI=mongodb://chuu:chuu@mongo:27017/chuu?authSource=admin ${{ secrets.DOCKER_USERNAME }}/chuu-backend:latest
