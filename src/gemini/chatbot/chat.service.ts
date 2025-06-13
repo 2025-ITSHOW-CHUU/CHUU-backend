@@ -6,9 +6,9 @@ import { Model } from 'mongoose';
 @Injectable()
 export class ChatService {
   constructor(
-      @InjectModel(Chat.name) private readonly chatModel: Model<ChatDocument>
+    @InjectModel(Chat.name) private readonly chatModel: Model<ChatDocument>,
   ) {}
-  
+
   private nameMemory = new Map<string, string>();
 
   // 이름 로직 설정 및 초기화
@@ -22,7 +22,7 @@ export class ChatService {
 
   clearUserName(roomId: string) {
     this.nameMemory.delete(roomId);
-  }   
+  }
 
   // gemini 호출 함수, user / assistant 별로 관리
   async createChat(data: {
@@ -39,7 +39,7 @@ export class ChatService {
   async getChatsByTeacher(teacherId: string, roomId?: string): Promise<Chat[]> {
     const filter: any = { teacherId };
 
-    if(roomId) {
+    if (roomId) {
       filter.roomId = roomId;
     }
 
@@ -51,37 +51,35 @@ export class ChatService {
       .exec();
 
     return result;
-  
   }
 
   // 최근 메세지 불러오기
   async getChatsByRoom(roomId: string): Promise<any[]> {
-    return this.chatModel
-      .find({ roomId })
-      .sort({ createdAt: 1 })
-      .exec();
+    return this.chatModel.find({ roomId }).sort({ createdAt: 1 }).exec();
   }
 
   // assistant 최근 메세지
   async getLastAssistantMessagesByRoom(): Promise<any[]> {
     return this.chatModel.aggregate([
-      { $match: { role: 'assistant' } },  // assistant 메시지만 필터
+      { $match: { role: 'assistant' } }, // assistant 메시지만 필터
       { $sort: { createdAt: -1 } },
-      { $group: {
+      {
+        $group: {
           _id: '$roomId',
           teacherId: { $first: '$teacherId' },
           lastReply: { $first: '$message' },
-          lastMessageTime: { $first: '$createdAt' }
-      }},
+          lastMessageTime: { $first: '$createdAt' },
+        },
+      },
       {
         $project: {
-            _id: 0,
-            roomId: '$_id',
-            teacherId: 1,
-            lastReply: 1,
-            lastMessageTime: 1
-        }
-      }
+          _id: 0,
+          roomId: '$_id',
+          teacherId: 1,
+          lastReply: 1,
+          lastMessageTime: 1,
+        },
+      },
     ]);
   }
 }

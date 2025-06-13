@@ -106,7 +106,7 @@ export class ChatController {
     });
 
     // 현재 기억된 사용자 이름 가져오기
-    const currentUserName = this.chatService.getUserName(roomId);
+    const currentUserName = '미림';
 
     // 2. Gemini 응답 생성
     const geminiResponse = await this.geminiService.generateText(

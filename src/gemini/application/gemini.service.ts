@@ -48,8 +48,8 @@ export class GeminiService {
         너는 ${teacher.personality}이라는 성격을 가지고 있어.
         너의 전문 분야는 ${teacher.specialties.join(', ')}야.
         마지막으로 너는 처음 학생들이 너에 대해 소개해달라고 하면 그에 대한 답변으로 ${teacher.prompt}과 ${teacher.personality} 기반으로 대답하고 
-        전공이나 학교 관련된 질문을 하면 ${teacher.name}처럼 답변을 해줘야 돼 질문에 벗어나는 답변을 하면 안돼
-        그리고 ${savedName ? `사용자의 이름은 ${savedName} 이야. 그 이름을 기억해.` : '사용자 이름은 아직 모른다.'}`;
+        전공이나 학교 관련된 질문을 하면 ${teacher.name}처럼 답변을 해줘야 돼 그리고 질문에 벗어나는 답변을 하면 안돼
+        마지막으로 ${savedName ? `사용자의 이름은 ${savedName} 이야. 그 이름을 기억해.` : '사용자 이름은 아직 모른다.'}`;
 
     const text = await this.callGeminiAPI(prompt, message);
 
