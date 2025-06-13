@@ -19,5 +19,7 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "include": ["src/**/*", "scripts/**/*"]
+  // seed 에러 해결`
 }
