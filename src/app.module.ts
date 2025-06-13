@@ -17,25 +17,36 @@ import { ChatModule } from './gemini/chatbot/chat.module';
 import { TeacherModule } from './gemini/chatbot/teacher.module';
 import { GeminiController } from './gemini/presenters/gemini.controller';
 import { GeminiProModelProvider } from './gemini/gemini.provider';
+import { ImageController } from './image/image.controller';
+import { ImageModule } from './image/image.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb://admin:591006@localhost:27017/chuu?authSource=admin',
+      'mongodb://chuu:chuu@mongo:27017/chuu?authSource=admin',
     ),
     UserModule,
     HomeModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `../.env`,
+      envFilePath: `.env`,
     }),
     PostModule,
     ChatModule,
     GeminiModule,
     TeacherModule,
+    ImageModule,
   ],
-  controllers: [AppController, HomeController, UserController, PostController, ChatController, TeacherController, GeminiController],
+  controllers: [
+    AppController,
+    HomeController,
+    UserController,
+    PostController,
+    ChatController,
+    TeacherController,
+    GeminiController,
+    ImageController,
+  ],
   providers: [AppService, EventGateway, GeminiProModelProvider],
 })
-
 export class AppModule {}

@@ -1,0 +1,56 @@
+name: Deploy Backend to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create .env file
+        run: echo "${{ secrets.GIT_ENV }}" > .env
+
+      - name: Create PEM key file
+        run: |
+          echo "${{ secrets.EC2_KEY_BS64 }}" | tr -d '\n' | base64 -d > key.pem
+          chmod 600 key.pem
+
+      - name: Docker Login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      
+      - name: Docker build & push
+        run: |
+          docker buildx build -t ${{ secrets.DOCKER_USERNAME }}/chuu-backend:latest . --no-cache --push
+
+      - name: Backup MongoDB on EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_IP }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            echo "[백업 시작]"
+            docker exec mongo sh -c 'exec mongodump --archive=/data/backup/backup_$(date +%F_%T).archive'
+            echo "[백업 완료]"
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_IP }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            # DockerHub에서 프론트엔드 이미지 pull
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/chuu-backend:latest
+
+            # 기존 컨테이너 중지 및 제거
+            sudo docker stop chuu-backend
+            sudo docker rm chuu-backend
+
+            sudo docker run -d -p 3000:3000 --name chuu-backend --network chuu-network --env-file .env ${{ secrets.DOCKER_USERNAME }}/chuu-backend:latest

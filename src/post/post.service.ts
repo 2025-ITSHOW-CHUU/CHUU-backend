@@ -80,6 +80,8 @@ export class PostService {
       const posts = await this.postModel.find({}).sort({
         createdAt: -1,
       });
+
+      console.log(posts);
       const formattedPosts: PostType[] = posts.map((post) => ({
         teacher: post.teacher,
         comment: post.comment,
