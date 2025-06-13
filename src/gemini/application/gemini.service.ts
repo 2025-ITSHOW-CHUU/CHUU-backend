@@ -10,6 +10,18 @@ export class GeminiService {
   constructor(
     @Inject(GEMINI_PRO_MODEL) private readonly proModel: GenerativeModel,
   ) {}
+  // 이름 상태 저장
+  private userNames = new Map<string, string>();
+
+  private extractUserName(message: string): string | null {
+    // 이름 추출 로직
+    const nameRegex = /내\s*이름은|나는|저는|저\s*([가-힣a-zA-Z0-9]+)(이야|입니다|라고|이에요|예요)?/;
+    const match = message.match(nameRegex);
+    if (match && match[1]) {
+      return match[1];
+    }
+    return null;
+  }
 
   async generateText(
     teacherId: string,
@@ -23,12 +35,21 @@ export class GeminiService {
       throw new Error('유효하지 않은 teacherId입니다.');
     }
 
+    const extractedName = this.extractUserName(message);
+    if (extractedName && teacherId) {
+      this.userNames.set(teacherId, extractedName);
+    }
+
+    // roomId 로 저장된 이름 불러오기
+    const savedName = teacher ? this.userNames.get(teacherId) : undefined;
+
+
     const prompt = `너는 ${teacher.name}이야, 너를 학생들이 ${teacher.name}으로 부를거야
         너는 ${teacher.personality}이라는 성격을 가지고 있어.
         너의 전문 분야는 ${teacher.specialties.join(', ')}야.
-        마지막으로 너는 처음 학생들에 대한 답변으로 ${teacher.prompt}를 기반으로 대답하고 
+        마지막으로 너는 처음 학생들이 너에 대해 소개해달라고 하면 그에 대한 답변으로 ${teacher.prompt}과 ${teacher.personality} 기반으로 대답하고 
         전공이나 학교 관련된 질문을 하면 ${teacher.name}처럼 답변을 해줘야 돼 질문에 벗어나는 답변을 하면 안돼
-        ${teacher}야~ 라고 소개는 한번만때만 해줘 `;
+        그리고 ${savedName ? `사용자의 이름은 ${savedName} 이야. 그 이름을 기억해.` : '사용자 이름은 아직 모른다.'}`;
 
     const text = await this.callGeminiAPI(prompt, message);
 
