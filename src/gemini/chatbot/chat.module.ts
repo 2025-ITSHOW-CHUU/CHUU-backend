@@ -9,16 +9,17 @@ import { GeminiModule } from '../gemini.module';
 import { Teacher, TeacherSchema } from './schemas/teacher.schema';
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([{ name: Chat.name, schema: ChatSchema },
-                                    { name: Teacher.name, schema: TeacherSchema }
-        ]),
-        forwardRef(() => TeacherModule),
-        // 순환 의존성 해결
-        forwardRef(() => GeminiModule),
-    ],
-    controllers: [ChatController],
-    providers: [ChatService, GeminiService],
-    exports: [ChatService],
+  imports: [
+    MongooseModule.forFeature([
+      { name: Chat.name, schema: ChatSchema },
+      { name: Teacher.name, schema: TeacherSchema },
+    ]),
+    forwardRef(() => TeacherModule),
+    // 순환 의존성 해결
+    forwardRef(() => GeminiModule),
+  ],
+  controllers: [ChatController],
+  providers: [ChatService, GeminiService],
+  exports: [ChatService],
 })
 export class ChatModule {}
