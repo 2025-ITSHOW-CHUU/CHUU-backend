@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, Types } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 export type ChatDocument = Chat & Document;
 
@@ -8,17 +8,20 @@ export class Chat {
     @Prop({ required: true })
     roomId: string;
 
-    @Prop({ type: Types.ObjectId, ref: 'Teacher', required: true})
-    teacherId: Types.ObjectId;  
+    @Prop({ required: true})
+    teacherId: string;  
 
     @Prop({ required: true})
     message: string;    
 
     @Prop()
-    response: string;   
+    response?: string;   
+
+    @Prop({ required: true, enum: ['user', 'assistant'] })
+    role: 'user' | 'assistant';
 
     @Prop({ default: false })
-    read: boolean;
+    read?: boolean;
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);

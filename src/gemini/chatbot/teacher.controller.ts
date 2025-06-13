@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
-import { TeacherService } from "./teacher.service";
-import { Teacher } from "./schemas/teacher.schema";
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { TeacherService } from './teacher.service';
+import { Teacher } from './schemas/teacher.schema';
 
 @Controller('teachers')
 export class TeacherController {

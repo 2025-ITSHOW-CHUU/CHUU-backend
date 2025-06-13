@@ -1,10 +1,13 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Teacher } from "./schemas/teacher.schema";
-import { Model } from "mongoose";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Teacher } from './schemas/teacher.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class TeacherService {
+    findByTeacherId(): Teacher | PromiseLike<Teacher> {
+        throw new Error("Method not implemented.");
+    }
     constructor(@InjectModel(Teacher.name) private teacherModel: Model<Teacher>) {}
 
     async findPrompById(teacherId: string): Promise<string> {
