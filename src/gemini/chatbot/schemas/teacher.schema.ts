@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 @Schema()
 export class Teacher extends Document {
@@ -14,6 +14,12 @@ export class Teacher extends Document {
 
     @Prop()
     prompt: string;
+
+    @Prop()
+    imagePath: string;
+
+    @Prop({ type: [String] })
+    specialties: string[];
 }
 
 export const TeacherSchema = SchemaFactory.createForClass(Teacher);

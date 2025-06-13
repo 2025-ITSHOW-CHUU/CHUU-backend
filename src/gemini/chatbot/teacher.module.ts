@@ -1,7 +1,8 @@
-import { Module } from "@nestjs/common";
-import { TeacherService } from "./teacher.service";
-import { MongooseModule } from "@nestjs/mongoose";
-import { Teacher, TeacherSchema } from "./schemas/teacher.schema";
+import { Module } from '@nestjs/common';
+import { TeacherService } from './teacher.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Teacher, TeacherSchema } from './schemas/teacher.schema';
+import { TeacherSeeder } from 'src/seeds/teacher.seeder';
 
 @Module({
     imports: [
@@ -9,7 +10,7 @@ import { Teacher, TeacherSchema } from "./schemas/teacher.schema";
             { name: Teacher.name, schema: TeacherSchema}
         ])
     ],
-    providers: [TeacherService],
-    exports: [TeacherService, MongooseModule],
+    providers: [TeacherService, TeacherSeeder],
+    exports: [TeacherService, MongooseModule, TeacherSeeder],
 })
 export class TeacherModule {}
