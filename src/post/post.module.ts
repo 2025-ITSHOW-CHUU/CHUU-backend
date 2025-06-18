@@ -5,6 +5,7 @@ import { Post, PostSchema } from './schemas/post.schema';
 import { PostController } from './post.controller';
 import { ConfigModule } from '@nestjs/config';
 import { PostGateway } from './post.gateway';
+import { EventGateway } from 'src/event/event.gateway';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { PostGateway } from './post.gateway';
     ConfigModule,
   ],
   controllers: [PostController],
-  providers: [PostService, PostGateway],
+  providers: [PostService, PostGateway, EventGateway],
   exports: [PostService],
 })
 export class PostModule {}
