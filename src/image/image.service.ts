@@ -50,8 +50,8 @@ export class ImageService {
             </html>
         `;
   }
-  async sendImageEmail(to: string, base64Image: string) {
-    const imageBuffer = Buffer.from(base64Image, 'base64');
+  async sendImageEmail(to: string, file: Express.Multer.File) {
+    const imageBuffer = file.buffer;
 
     await this.transporter.sendMail({
       from: `"Chuu" <${this.configService.get('EMAIL_USER')}>`,
