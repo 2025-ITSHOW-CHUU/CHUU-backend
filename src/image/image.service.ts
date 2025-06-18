@@ -15,7 +15,7 @@ export class ImageService {
             <head>
                 <title>Print Image</title>
                 <style>
-                    body { text-align: center; margin: 0; padding: 20px; background-color: #f9f9f9; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; }
+                    body { text-align: center; margin: 0; padding: 20px; background-color: #f9f9f9; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; height: 80vh; }
                     img { width: 100%; filter: grayscale(100%) invert(0); position: absoulte; }
                 </style>
             </head>
@@ -26,6 +26,10 @@ export class ImageService {
                     setTimeout(() => {
                       window.print();
                     }, 500); // 이미지 로딩 여유시간
+
+                    window.onafterprint = () => {
+                      window.close(); // 인쇄 후 자동 닫기
+                    };
                   };
                 </script>
             </body>
