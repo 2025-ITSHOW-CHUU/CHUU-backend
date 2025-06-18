@@ -27,7 +27,8 @@ export class ImageController {
   async sendImageEmail(
     @UploadedFile() file: Express.Multer.File,
     @Body('email') email: string,
+    @Body('type') type: string,
   ) {
-    return this.imageService.sendImageEmail(email, file);
+    return this.imageService.sendImageEmail(email, file, type);
   }
 }
