@@ -28,4 +28,9 @@ export class PostController {
   async getPost() {
     return await this.postService.getPost();
   }
+
+  @Get('/num')
+  async getTotalPostsNum() {
+    return await this.postService.getTotalPostsNum();
+  }
 }

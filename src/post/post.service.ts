@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Post, PostDocument } from './schemas/post.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -6,6 +6,7 @@ import { CreatePostDto } from './dto/post.dto';
 import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
 import { PostGateway } from './post.gateway';
+import { EventGateway } from 'src/event/event.gateway';
 
 type PostType = {
   teacher: string;
@@ -14,14 +15,16 @@ type PostType = {
 };
 
 @Injectable()
-export class PostService {
+export class PostService implements OnModuleInit {
   private s3: AWS.S3;
   private bucketName: string;
+  private totalPostNum = 0;
 
   constructor(
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     private configService: ConfigService,
     private postGateway: PostGateway,
+    private readonly eventGateway: EventGateway,
   ) {
     AWS.config.update({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -31,6 +34,17 @@ export class PostService {
     this.s3 = new AWS.S3();
     this.bucketName =
       this.configService.get<string>('AWS_BUCKET_NAME') || 'it-show-nuto';
+  }
+
+  async onModuleInit() {
+    const totalPosts = await this.postModel.countDocuments();
+
+    this.totalPostNum = totalPosts;
+
+    this.eventGateway.server.emit('update-totalposts', {
+      totalposts: this.totalPostNum,
+    });
+    console.log('초기 총 참여자 수:', this.totalPostNum);
   }
 
   async uploadPost(
@@ -62,12 +76,34 @@ export class PostService {
 
         this.postGateway.sendNewPost(newPost);
 
+        this.totalPostNum += 1;
+
+        this.eventGateway.server.emit('update-totalposts', {
+          totalposts: this.totalPostNum,
+        });
+
         return { success: true, message: 'Success to upload post' };
       } catch (error) {
         throw new Error(`Failed to upload post: ${error}`);
       }
     } else {
       return { success: false, message: 'No file provided' };
+    }
+  }
+
+  async getTotalPostsNum(): Promise<{ success: boolean; data?: number }> {
+    try {
+      const totalpostsNum = await this.postModel.countDocuments();
+
+      return {
+        success: true,
+        data: totalpostsNum,
+      };
+    } catch (e) {
+      console.log(e);
+      return {
+        success: false,
+      };
     }
   }
 
