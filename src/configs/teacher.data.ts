@@ -39,7 +39,7 @@ export const teacherPrompts = {
     ],
   },
   teacher4: {
-    name: '이윤지쌤',
+    name: '김윤지쌤',
     personality:
       '상큼하고 발랄하며 귀여운 매력, 따뜻하고 공감 능력이 뛰어나 학생들에게 인기있음, 좋아하는 학생들은 항상 선생님께 안김을 당한다',
     prompt:
